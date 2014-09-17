@@ -11,6 +11,7 @@
 #ifndef _CALC_H_
 #define _CALC_H_
 
+#include <cstddef>      /* For NULL */
 #include "calcnode.h"
 #include "operation.h"
 
@@ -27,7 +28,7 @@ public:
     ~Calc();
 
     /* Pushes number onto internal stack */
-    template<class T>
+    template <class T>
     void push(T number);
 
     /* Removes number from internal stack. If the stack is empty, throws an
@@ -37,13 +38,35 @@ public:
     /* Evaluates the given operation, pushing the result onto the stack. If not
      * enough values are present on the stack -- which is checked through the
      * operation's "arity" -- an exception is thrown. */
-    void eval(Operation op);
     void eval(const Operation& op);
 
 private:
 
-    /* The internal "stack" used to store values, made of general StackNodes */
+    /* The internal "stack" used to store values, made of general CalcNodes */
     CalcNode* top;
 };
+
+Calc::Calc() {
+    top = NULL;
+}
+
+Calc::~Calc() {
+    delete top;
+}
+
+template <class T>
+void Calc::push(T number) {
+    if (!top) {
+        top = new CalcNode();
+        top->number = new NumberEntry<T>(number);
+    } else {
+        CalcNode* current = top;
+        while (current->next) {
+            current = current->next;
+        }
+        current->next = new CalcNode();
+        current->next->number = new NumberEntry<T>(number);
+    }
+}
 
 #endif

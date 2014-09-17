@@ -14,15 +14,56 @@ class Operation {
 public:
 
     /* Constructor and destructor */
-    Operation();
-    ~Operation();
+    Operation() {};
+    virtual ~Operation() = 0;
 
-    template <typename... Arguments>
-    virtual eval(Arguments... operands) = 0;
+    /*
+    template <typename T, typename... Arguments>
+    T eval(Arguments... operands);
+    */
 
-protected:
+    virtual double eval(double x, double y) = 0;
+
+    int getArity() {
+        return arity;
+    }
+
+private:
     
     static const int arity;
-}
+};
+
+class Addition : public Operation {
+public:
+
+    virtual double eval(double x, double y) {
+        return x + y;
+    }
+};
+
+class Subtraction : public Operation {
+public:
+
+    virtual double eval(double x, double y) {
+        return x - y;
+    }
+};
+
+class Multiplication : public Operation {
+public:
+
+    virtual double eval(double x, double y) {
+        return x * y;
+    }
+};
+
+
+class Division : public Operation {
+public:
+
+    virtual double eval(double x, double y) {
+        return x / y;
+    }
+};
 
 #endif

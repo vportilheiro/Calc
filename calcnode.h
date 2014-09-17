@@ -9,29 +9,34 @@
 #ifndef _CALCNODE_H_
 #define _CALCNODE_H_
 
-class CalcNode {
-public:
-    CalcNode();
-    ~CalcNode();
-    CalcNode* next;
-
-protected:
-    Numerical number;
+struct Numerical {
+    Numerical(){}
+    virtual ~Numerical() = 0;
 };
 
-class Numerical {
-public:
-    Numerical();
-    ~Numerical();
-}
-
 template <class T>
-class NumberEntry : public Numerical {
-public:
-    NumberEntry();
-    virtual ~NumberEntry();
+struct NumberEntry : Numerical {
+    NumberEntry(T entry) {
+        this->entry = entry;
+    }
+    virtual ~NumberEntry(){}
 
     T entry;
-}
+};
+
+struct CalcNode {
+    CalcNode() {
+        this->next = NULL;
+        this->number = NULL;
+    }
+
+    ~CalcNode() {
+        delete number;
+        delete next;
+    };
+
+    CalcNode* next;
+    Numerical* number;
+};
 
 #endif
